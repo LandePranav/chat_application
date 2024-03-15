@@ -23,7 +23,7 @@ export default function Chat() {
 
     function connectToWs(){
         //const ws = new WebSocket('ws://localhost:4040/api') ;
-        const ws = new WebSocket('wss://zenith-chatapp.vercel.app/api') ;
+        const ws = new WebSocket('wss://zenith-chatapp.vercel.app') ;
         setWs(ws) ;
         ws.addEventListener('message', handleMessage) ;
         ws.addEventListener('close', () => {
