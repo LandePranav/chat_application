@@ -49,10 +49,12 @@ async function getUserDataFromRequest(req){
 const port = process.env.PORT ;
 
 app.get('/api/test', (req,res) => {
+    mongoose.connect(process.env.MONGO_URI) ;
     res.json('Backend Server Is Running OK') ;
 }) ;
 
 app.get('/api/messages/:userId', async (req,res) => {
+    mongoose.connect(process.env.MONGO_URI) ;
     const {userId} = req.params ;
     const userData = await getUserDataFromRequest(req) ;
     const ourUserId = userData.userId ;
@@ -65,11 +67,13 @@ app.get('/api/messages/:userId', async (req,res) => {
 }) ;
 
 app.get('/api/people', async (req,res) => {
+    mongoose.connect(process.env.MONGO_URI) ;
     const users = await User.find({}, {'_id':1, username:1}) ;
     res.json(users) ;
 }) ;
 
 app.get('/api/profile', (req,res) => {
+    mongoose.connect(process.env.MONGO_URI) ;
     const token = req.cookies?.token ;
         if(token){
             jwt.verify(token,jwtSecret,{},(err,userData) => {
@@ -86,6 +90,7 @@ app.get('/api/profile', (req,res) => {
 }) ;
 
 app.post('/api/register', async (req,res) => {
+    mongoose.connect(process.env.MONGO_URI) ;
     const {username,password} = req.body ;
     try {
         const hashedPassword = bcrypt.hashSync(password,bSalt) ;
@@ -108,6 +113,7 @@ app.post('/api/register', async (req,res) => {
 }) ;
 
 app.post('/api/login', async (req,res) => {
+    mongoose.connect(process.env.MONGO_URI) ;
     const {username,password} = req.body ;
     try {
         const foundUser = await User.findOne({username}) ;
@@ -130,6 +136,7 @@ app.post('/api/login', async (req,res) => {
 }) ;
 
 app.post('/api/logout', (req,res) => {
+    mongoose.connect(process.env.MONGO_URI) ;
     res.cookie('token', '', {sameSite:'none', secure:true}).status(201).json('logged out succesfullt') ;
 }) ;
 
@@ -235,7 +242,6 @@ wss.on('connection', (connection, req) => {
             // } ) ;
 
             ///s3 utility from here
-
             url = await uploadToS3(bufferData, filename, file.mimetype) ;
             console.log(url) ;
         }

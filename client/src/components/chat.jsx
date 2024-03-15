@@ -22,7 +22,8 @@ export default function Chat() {
     }, []) ;
 
     function connectToWs(){
-        const ws = new WebSocket('ws://localhost:4040') ;
+        //const ws = new WebSocket('ws://localhost:4040/api') ;
+        const ws = new WebSocket('ws://zenith-chatapp.vercel.app/api') ;
         setWs(ws) ;
         ws.addEventListener('message', handleMessage) ;
         ws.addEventListener('close', () => {
@@ -41,7 +42,7 @@ export default function Chat() {
     }, [messages]) ;
 
     useEffect(() => {
-        axios.get('people').then(res => {
+        axios.get('/people').then(res => {
             const offlinePeopleArr = res.data
                                     .filter(p => p._id !== userId)
                                     .filter(p => !Object.keys(onlinePeople).includes(p._id));
@@ -89,7 +90,6 @@ export default function Chat() {
                 setMessages(prev => ([...prev,{...messageData,isOur:false}])) ;
             }
         }
-
     }
 
     async function sendMessage(e,file=null){
